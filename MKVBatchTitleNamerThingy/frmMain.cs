@@ -193,8 +193,23 @@ namespace MKVBatchTitleNamerThingy
             DialogResult result = ofdMKV.ShowDialog();      // Show dialog and get result from it
             if (result == DialogResult.OK)                  // If user clicks OK
             {
-                mkvFiles = ofdMKV.FileNames;                // Get filepaths of selected files and store in array
-                LoadFileInfo();                             // Load the file info into form
+                rtxLog.Clear();                                     // Clear the log
+                List<string> goodFileNames = new List<string>();    // make new list for fileNames are are actually .mkv files
+
+                for (int i = 0; i < ofdMKV.FileNames.Length; i++)   // For each of the selected files...
+                {
+                    if (ofdMKV.FileNames[i].EndsWith(".mkv"))           // Sanity checking: if the file name ends with .mkv...
+                        goodFileNames.Add(ofdMKV.FileNames[i]);             // Add it to the "good file names" list
+                    else
+                        rtxLog.SendToLog("ERROR!: Selected file is not an .mkv file! Skipping... (" + ofdMKV.FileNames[i] + ")");   // Otherwise print error to log
+                }
+
+                mkvFiles = goodFileNames.ToArray();                 // Convert good file name List to Array for LoadFileInfo()
+
+                if (mkvFiles.Length < 1)                            // If there are no filenames in array...
+                    rtxLog.SendToLog("ERROR!: There are no .mkv files selected! Nothing to do.");   // Print error to log regarding this and do nothing else
+                else
+                    LoadFileInfo();                                 // Otherwise load the file info into form
             }
         }
 
@@ -208,8 +223,13 @@ namespace MKVBatchTitleNamerThingy
             DialogResult result = fbdMKVDir.ShowDialog();       // Show dialog and get result from it
             if (result == DialogResult.OK)                      // If user clicked OK...
             {
-                mkvFiles = Directory.GetFiles(fbdMKVDir.SelectedPath, "*.mkv"); // Get the filepaths for each .mkv file in directory and store in array
-                LoadFileInfo();                                 // Load the file info to form
+                rtxLog.Clear();                                                     // Clear the log
+                mkvFiles = Directory.GetFiles(fbdMKVDir.SelectedPath, "*.mkv");     // Get the filepaths for each .mkv file in directory and store in array
+
+                if (mkvFiles.Length < 1)                                                // If there are no .mkv files...
+                    rtxLog.SendToLog("ERROR!: There are no .mkv files in this folder! (" + fbdMKVDir.SelectedPath + ")");   // Print error to log regarding this and do nothing else
+                else
+                    LoadFileInfo();                                                     // Otherwise load the file info to form
             }
         }
 

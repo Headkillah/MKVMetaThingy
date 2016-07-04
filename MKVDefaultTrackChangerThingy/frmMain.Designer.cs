@@ -37,41 +37,41 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.lblFile = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.otherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.userIsInsaneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mKVToolNixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.goToMKVToolNixsHomepageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.goToMKVToolNixdownloadPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recheckToSeeIfMKVToolNixIsInstalledOnThisMachineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lblWarning = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.rtxLog = new System.Windows.Forms.RichTextBox();
             this.lblAppInfo = new System.Windows.Forms.Label();
             this.llbMKVToolNix = new System.Windows.Forms.LinkLabel();
+            this.txtFile = new System.Windows.Forms.TextBox();
+            this.fbdMKVDir = new System.Windows.Forms.FolderBrowserDialog();
+            this.btnLoadDir = new System.Windows.Forms.Button();
+            this.loadDataFromFolderOfMKVFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(12, 89);
+            this.btnLoad.Location = new System.Drawing.Point(12, 96);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(75, 23);
             this.btnLoad.TabIndex = 1;
-            this.btnLoad.Text = "&Load";
+            this.btnLoad.Text = "L&oad";
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // lbxAudio
             // 
             this.lbxAudio.FormattingEnabled = true;
-            this.lbxAudio.Location = new System.Drawing.Point(12, 141);
+            this.lbxAudio.Location = new System.Drawing.Point(12, 148);
             this.lbxAudio.Name = "lbxAudio";
             this.lbxAudio.Size = new System.Drawing.Size(429, 95);
             this.lbxAudio.TabIndex = 2;
@@ -87,11 +87,12 @@
             // ofdMKV
             // 
             this.ofdMKV.Filter = "Matroska Video files|*.mkv";
+            this.ofdMKV.Multiselect = true;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 125);
+            this.label1.Location = new System.Drawing.Point(12, 132);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(70, 13);
             this.label1.TabIndex = 4;
@@ -118,7 +119,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 73);
+            this.label4.Location = new System.Drawing.Point(12, 80);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(30, 13);
             this.label4.TabIndex = 7;
@@ -127,22 +128,14 @@
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Location = new System.Drawing.Point(41, 73);
+            this.lblTitle.Location = new System.Drawing.Point(41, 80);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(0, 13);
             this.lblTitle.TabIndex = 8;
             // 
-            // lblFile
-            // 
-            this.lblFile.AutoSize = true;
-            this.lblFile.Location = new System.Drawing.Point(41, 56);
-            this.lblFile.Name = "lblFile";
-            this.lblFile.Size = new System.Drawing.Size(0, 13);
-            this.lblFile.TabIndex = 9;
-            // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(93, 89);
+            this.btnSave.Location = new System.Drawing.Point(174, 96);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 10;
@@ -154,7 +147,6 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.otherToolStripMenuItem,
             this.mKVToolNixToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -166,6 +158,7 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.loadToolStripMenuItem,
+            this.loadDataFromFolderOfMKVFilesToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.exitProgramToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -196,22 +189,6 @@
             this.exitProgramToolStripMenuItem.Text = "E&xit Program";
             this.exitProgramToolStripMenuItem.Click += new System.EventHandler(this.exitProgramToolStripMenuItem_Click);
             // 
-            // otherToolStripMenuItem
-            // 
-            this.otherToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.userIsInsaneToolStripMenuItem});
-            this.otherToolStripMenuItem.Name = "otherToolStripMenuItem";
-            this.otherToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
-            this.otherToolStripMenuItem.Text = "&Other";
-            // 
-            // userIsInsaneToolStripMenuItem
-            // 
-            this.userIsInsaneToolStripMenuItem.Name = "userIsInsaneToolStripMenuItem";
-            this.userIsInsaneToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
-            this.userIsInsaneToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
-            this.userIsInsaneToolStripMenuItem.Text = "&User Is Insane - Batch Mode";
-            this.userIsInsaneToolStripMenuItem.Click += new System.EventHandler(this.userIsInsaneToolStripMenuItem_Click);
-            // 
             // mKVToolNixToolStripMenuItem
             // 
             this.mKVToolNixToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -219,14 +196,14 @@
             this.goToMKVToolNixdownloadPageToolStripMenuItem,
             this.recheckToSeeIfMKVToolNixIsInstalledOnThisMachineToolStripMenuItem});
             this.mKVToolNixToolStripMenuItem.Name = "mKVToolNixToolStripMenuItem";
-            this.mKVToolNixToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
+            this.mKVToolNixToolStripMenuItem.Size = new System.Drawing.Size(84, 20);
             this.mKVToolNixToolStripMenuItem.Text = "&MKVToolNix";
             // 
             // goToMKVToolNixsHomepageToolStripMenuItem
             // 
             this.goToMKVToolNixsHomepageToolStripMenuItem.Name = "goToMKVToolNixsHomepageToolStripMenuItem";
             this.goToMKVToolNixsHomepageToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.goToMKVToolNixsHomepageToolStripMenuItem.Size = new System.Drawing.Size(330, 22);
+            this.goToMKVToolNixsHomepageToolStripMenuItem.Size = new System.Drawing.Size(329, 22);
             this.goToMKVToolNixsHomepageToolStripMenuItem.Text = "Go to MKVToolNix &Homepage...";
             this.goToMKVToolNixsHomepageToolStripMenuItem.Click += new System.EventHandler(this.goToMKVToolNixsHomepageToolStripMenuItem_Click);
             // 
@@ -234,7 +211,7 @@
             // 
             this.goToMKVToolNixdownloadPageToolStripMenuItem.Name = "goToMKVToolNixdownloadPageToolStripMenuItem";
             this.goToMKVToolNixdownloadPageToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
-            this.goToMKVToolNixdownloadPageToolStripMenuItem.Size = new System.Drawing.Size(330, 22);
+            this.goToMKVToolNixdownloadPageToolStripMenuItem.Size = new System.Drawing.Size(329, 22);
             this.goToMKVToolNixdownloadPageToolStripMenuItem.Text = "Go to MKVToolNix &Download page...";
             this.goToMKVToolNixdownloadPageToolStripMenuItem.Click += new System.EventHandler(this.goToMKVToolNixdownloadPageToolStripMenuItem_Click);
             // 
@@ -242,22 +219,9 @@
             // 
             this.recheckToSeeIfMKVToolNixIsInstalledOnThisMachineToolStripMenuItem.Name = "recheckToSeeIfMKVToolNixIsInstalledOnThisMachineToolStripMenuItem";
             this.recheckToSeeIfMKVToolNixIsInstalledOnThisMachineToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.recheckToSeeIfMKVToolNixIsInstalledOnThisMachineToolStripMenuItem.Size = new System.Drawing.Size(330, 22);
+            this.recheckToSeeIfMKVToolNixIsInstalledOnThisMachineToolStripMenuItem.Size = new System.Drawing.Size(329, 22);
             this.recheckToSeeIfMKVToolNixIsInstalledOnThisMachineToolStripMenuItem.Text = "&Recheck to see if MKVToolNix is installed";
             this.recheckToSeeIfMKVToolNixIsInstalledOnThisMachineToolStripMenuItem.Click += new System.EventHandler(this.recheckToSeeIfMKVToolNixIsInstalledOnThisMachineToolStripMenuItem_Click);
-            // 
-            // lblWarning
-            // 
-            this.lblWarning.AutoSize = true;
-            this.lblWarning.BackColor = System.Drawing.Color.Red;
-            this.lblWarning.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblWarning.ForeColor = System.Drawing.Color.Yellow;
-            this.lblWarning.Location = new System.Drawing.Point(174, 89);
-            this.lblWarning.Name = "lblWarning";
-            this.lblWarning.Size = new System.Drawing.Size(218, 26);
-            this.lblWarning.TabIndex = 12;
-            this.lblWarning.Text = "WARNING!\r\nUSER IS INSANE BATCH MODE ON!";
-            this.lblWarning.Visible = false;
             // 
             // label5
             // 
@@ -298,18 +262,50 @@
             this.llbMKVToolNix.UseCompatibleTextRendering = true;
             this.llbMKVToolNix.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llbMKVToolNix_LinkClicked);
             // 
+            // txtFile
+            // 
+            this.txtFile.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtFile.HideSelection = false;
+            this.txtFile.Location = new System.Drawing.Point(44, 56);
+            this.txtFile.Multiline = true;
+            this.txtFile.Name = "txtFile";
+            this.txtFile.ReadOnly = true;
+            this.txtFile.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.txtFile.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtFile.Size = new System.Drawing.Size(395, 20);
+            this.txtFile.TabIndex = 18;
+            this.txtFile.WordWrap = false;
+            // 
+            // btnLoadDir
+            // 
+            this.btnLoadDir.Location = new System.Drawing.Point(93, 96);
+            this.btnLoadDir.Name = "btnLoadDir";
+            this.btnLoadDir.Size = new System.Drawing.Size(75, 23);
+            this.btnLoadDir.TabIndex = 19;
+            this.btnLoadDir.Text = "Load &Folder";
+            this.btnLoadDir.UseVisualStyleBackColor = true;
+            this.btnLoadDir.Click += new System.EventHandler(this.btnLoadDir_Click);
+            // 
+            // loadDataFromFolderOfMKVFilesToolStripMenuItem
+            // 
+            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.Name = "loadDataFromFolderOfMKVFilesToolStripMenuItem";
+            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.Size = new System.Drawing.Size(307, 22);
+            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.Text = "Load Data from &Folder of MKV files...";
+            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.Click += new System.EventHandler(this.loadDataFromFolderOfMKVFilesToolStripMenuItem_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(454, 518);
+            this.Controls.Add(this.btnLoadDir);
+            this.Controls.Add(this.txtFile);
             this.Controls.Add(this.llbMKVToolNix);
             this.Controls.Add(this.lblAppInfo);
             this.Controls.Add(this.rtxLog);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.lblWarning);
             this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.lblFile);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -341,16 +337,12 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label lblTitle;
-        private System.Windows.Forms.Label lblFile;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem otherToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitProgramToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem userIsInsaneToolStripMenuItem;
-        private System.Windows.Forms.Label lblWarning;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.RichTextBox rtxLog;
         private System.Windows.Forms.ToolStripMenuItem mKVToolNixToolStripMenuItem;
@@ -359,6 +351,10 @@
         private System.Windows.Forms.ToolStripMenuItem recheckToSeeIfMKVToolNixIsInstalledOnThisMachineToolStripMenuItem;
         private System.Windows.Forms.Label lblAppInfo;
         private System.Windows.Forms.LinkLabel llbMKVToolNix;
+        private System.Windows.Forms.TextBox txtFile;
+        private System.Windows.Forms.FolderBrowserDialog fbdMKVDir;
+        private System.Windows.Forms.Button btnLoadDir;
+        private System.Windows.Forms.ToolStripMenuItem loadDataFromFolderOfMKVFilesToolStripMenuItem;
     }
 }
 

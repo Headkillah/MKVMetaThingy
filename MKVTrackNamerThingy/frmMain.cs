@@ -107,17 +107,33 @@ namespace MKVTrackNamerThingy
         #region methods
 
         /// <summary>
-        /// Method to loadfiles from and OpenFileDialog
+        /// Method to load files using an OpenFileDialog
         /// </summary>
         private void LoadFile()
         {
-            DialogResult result = ofdMKV.ShowDialog();  // Show dialog
-            if (result == DialogResult.OK)              // If user clicks OK...
+            DialogResult result = ofdMKV.ShowDialog();      // Show dialog
+            if (result == DialogResult.OK)                  // If user clicks OK...
             {
-                if (ofdMKV.FileNames.Length > 1)        // If there is more than one
-                    LoadFileInfo(ofdMKV.FileNames);     // Load the array into LoadFileInfo
+                rtxLog.Clear();                                     // Clear the log
+                List<string> goodFileNames = new List<string>();    // make new list for fileNames are are actually .mkv files
+                string[] mkvFiles;                                  // declare array for fileNames from list
+
+                for (int i = 0; i < ofdMKV.FileNames.Length; i++)   // For each of the selected files...
+                {
+                    if (ofdMKV.FileNames[i].EndsWith(".mkv"))           // Sanity checking: if the file name ends with .mkv...
+                        goodFileNames.Add(ofdMKV.FileNames[i]);             // Add it to the "good file names" list
+                    else
+                        rtxLog.SendToLog("ERROR!: Selected file is not an .mkv file! Skipping... (" + ofdMKV.FileNames[i] + ")");   // Otherwise print error to log
+                }
+
+                mkvFiles = goodFileNames.ToArray();                 // Convert good file name List to Array for LoadFileInfo()
+
+                if (mkvFiles.Length < 1)                            // If there are no filenames in array...
+                    rtxLog.SendToLog("ERROR!: There are no .mkv files selected! Nothing to do.");   // Print error to log regarding this and do nothing else
+                else if (mkvFiles.Length > 1)                       // Else if there is, and more than one
+                    LoadFileInfo(mkvFiles);                             // Load the array into LoadFileInfo
                 else
-                    LoadFileInfo(ofdMKV.FileName);      // Otherwise just load the one
+                    LoadFileInfo(mkvFiles[0]);                      // Otherwise just load the one filename
             }
         }
 
@@ -127,15 +143,18 @@ namespace MKVTrackNamerThingy
         private void LoadDir()
         {
             fbdMKVDir.Description = "Please select the folder containing all the .mkv files you want to modify:";
-            DialogResult result = fbdMKVDir.ShowDialog();                                   // Show dialog
-            if (result == DialogResult.OK)                                                  // If user clicks OK...
+            DialogResult result = fbdMKVDir.ShowDialog();                               // Show dialog
+            if (result == DialogResult.OK)                                              // If user clicks OK...
             {
-                string[] mkvFiles = Directory.GetFiles(fbdMKVDir.SelectedPath, "*.mkv");    // Get filenames from dialog
+                rtxLog.Clear();                                                             // Clear the log
+                string[] mkvFiles = Directory.GetFiles(fbdMKVDir.SelectedPath, "*.mkv");    // Get filenames of .mkv files in directory from dialog
 
-                if (mkvFiles.Length > 1)                                                    // If there is more than one
-                    LoadFileInfo(mkvFiles);                                                 // Load the array into LoadFileInfo
+                if (mkvFiles.Length < 1)                                                    // If there are no .mkv files...
+                    rtxLog.SendToLog("ERROR!: There are no .mkv files in this folder! (" + fbdMKVDir.SelectedPath + ")");   // Print error to log regarding this and do nothing else
+                else if (mkvFiles.Length > 1)                                               // Else if there is, and  more than one
+                    LoadFileInfo(mkvFiles);                                                     // Load the array into LoadFileInfo
                 else
-                    LoadFileInfo(mkvFiles[0]);                                              // Otherwise just load the one
+                    LoadFileInfo(mkvFiles[0]);                                                  // Otherwise just load the one filename
             }
         }
 
@@ -217,7 +236,7 @@ namespace MKVTrackNamerThingy
             myDebug.WriteLine(Path.GetFileName(mkvFiles[maxAudioIndex]) + " has the most Audio tracks.");
             myDebug.WriteLine(Path.GetFileName(mkvFiles[maxSubIndex]) + " has the most Subtitle tracks.");
 
-            lblTitle.Text = "(Multiple files are loaded)";         // Change title labelto inform that there are multiple files loadad
+            lblTitle.Text = "(Multiple files are loaded)";         // Change title label to inform that there are multiple files loadad
         }
 
         /// <summary>
