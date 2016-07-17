@@ -48,9 +48,7 @@ namespace MKVBatchTitleNamerThingy
             lblAppInfo.Text = Application.ProductName + " ver" + Application.ProductVersion + lblAppInfo.Text;
 
             // Disable some controls until data is loaded
-            btnTitleCopy.Enabled = false;
-            chkTitleSelectAll.Enabled = false;
-            chkFileSelectAll.Enabled = false;
+            UnlockEditControls(false);
 
             // Enabling/Disabling some default options
             chkTitlePrepShow.Checked = true;
@@ -64,13 +62,13 @@ namespace MKVBatchTitleNamerThingy
             chkFilePrepEpNo.Checked = true;
             chkFilePrepDash.Checked = true;
             nudFileMinDigits.Value = 2;
-            txtFileSeasonPre.Text = "S0";
+            txtFileSeasonPre.Text = "S01";
             cboFileEpisodePre.SelectedItem = "E";
 
             // Check for MKVToolNix installed on system
             if (!MKVToolNix.IsInstalled())
             {
-                UnlockFormControls(false);
+                UnlockLoadControls(false);
                 MKVToolNix.FoundNotify(false);
             }
         }
@@ -94,6 +92,12 @@ namespace MKVBatchTitleNamerThingy
         {
             for (int i = 0; i < txtFileNames.Length; i++)           // For each file name...
                 txtFileNames[i].Text = txtTitles[i].Text;           // Get the respective title from it's title textbox and copy it to the filename textbox
+        }
+
+        private void btnOffsetCopy_Click(object sender, EventArgs e)
+        {
+            chkFilePrepEpOffset.Checked = chkTitlePrepEpOffset.Checked;
+            nudFileEpOffset.Value = nudTitleEpOffset.Value;
         }
 
         private void loadDataFromMKVToolStripMenuItem_Click(object sender, EventArgs e)
@@ -130,7 +134,7 @@ namespace MKVBatchTitleNamerThingy
         {
             bool installed = MKVToolNix.IsInstalled();
 
-            UnlockFormControls(installed);
+            UnlockLoadControls(installed);
             MKVToolNix.FoundNotify(installed);
         }
 
@@ -172,17 +176,30 @@ namespace MKVBatchTitleNamerThingy
         #region methods
 
         /// <summary>
-        /// Method to lock/unlock form controls based on supplied value
+        /// Method to lock/unlock file loading controls based on supplied value, used to lock controls until MKVToolNix is installed
         /// </summary>
         /// <param name="unlocked">Boolean representing whether to lock or unlock certain form controls</param>
-        private void UnlockFormControls(bool unlocked)
+        private void UnlockLoadControls(bool unlocked)
         {
             loadDataFromMKVToolStripMenuItem.Enabled = unlocked;                    // Controls to lock unlock
             loadDataFromDirectoryOfMKVFilesToolStripMenuItem.Enabled = unlocked;
-            saveDataToMKVToolStripMenuItem.Enabled = unlocked;
             btnLoad.Enabled = unlocked;
             btnLoadDir.Enabled = unlocked;
+        }
+
+        /// <summary>
+        /// Method to lock/unlock all the edit-related controls based on supplied value, good for locking things until files are loaded.
+        /// </summary>
+        /// <param name="unlocked">Boolean representing whether to lock or unlock the controls</param>
+        private void UnlockEditControls(bool unlocked)
+        {
+            btnTitleCopy.Enabled = unlocked;                // Enable Copy Titles Over button, and the Activated and select all checkboxes
+            chkTitleEditActivate.Enabled = unlocked;
+            chkFileNameEditActivate.Enabled = unlocked;
+            chkTitleSelectAll.Enabled = unlocked;
+            chkFileSelectAll.Enabled = unlocked;
             btnSave.Enabled = unlocked;
+            saveDataToMKVToolStripMenuItem.Enabled = unlocked;
         }
 
         /// <summary>
@@ -326,9 +343,7 @@ namespace MKVBatchTitleNamerThingy
                     txtTitles[i].Text = "";                                         // Display blank title if not present
                 }
             }
-            btnTitleCopy.Enabled = true;                // Enable Copy Titles Over button, and the select all checkboxes
-            chkTitleSelectAll.Enabled = true;
-            chkFileSelectAll.Enabled = true;
+            UnlockEditControls(true);                // Enable Copy Titles Over button, and the Activated and select all checkboxes
             txtShowTitle.Focus();                       // Put cursor focus on the shot title textbox for user to type in the show's title
         }
 
@@ -352,7 +367,7 @@ namespace MKVBatchTitleNamerThingy
         private void SaveTitleNames()
         {
             int filesModified = 0;                              // Initialize count of successfully modified files
-            int fileCount = lblTitleFileNames.Length;           // Get cunt of all files
+            int fileCount = lblTitleFileNames.Length;           // Get count of all files
             string retStr = null;                               // init string retStr for RunProcess output
             string exeName = "\"" + MKVToolNix.ExeGetPath(MKVToolNix.mkvpropeditExe) + "\"";    // Get path for mkvpropedit.exe and wrap in quotes for RunProcess arg
             string sType = "s";                                 // init setting type string, default is "s"
@@ -411,7 +426,7 @@ namespace MKVBatchTitleNamerThingy
                             // Send error to log, and skip file
                             rtxLog.SendToLog("ERROR: could not seem to access this file, Skipping..." + Environment.NewLine);
                             //filesModified--;
-                            break;
+                            continue;
                         }
                     }
                     filesModified++;    // increment filesModified
@@ -490,7 +505,7 @@ namespace MKVBatchTitleNamerThingy
                     if (newFileName == "")                          // Ifthe new file name string is blank...
                     {
                         rtxLog.SendToLog("ERROR: No new file name set, Skipping..." + Environment.NewLine);
-                        break;                                      // Then print error to log and skip this file
+                        continue;                                      // Then print error to log and skip this file
                     }
 
                     if (File.Exists(mkvFiles[i]) && (!File.Exists(newFilePath)))    // If the file you are trying to rename still exists AND the file with newFileName does not already exist...
@@ -505,7 +520,7 @@ namespace MKVBatchTitleNamerThingy
                         {
                             // If that fails due to invalid characters in name, print error to log and skip file
                             rtxLog.SendToLog("ERROR: new file name contains invalid characters. Skipping..." + Environment.NewLine);
-                            break;
+                            continue;
                         }
                     }
                     else
@@ -514,14 +529,14 @@ namespace MKVBatchTitleNamerThingy
                         {
                             // print error to log and skip file
                             rtxLog.SendToLog("ERROR: File does not actually seem to exist... Skipping..." + Environment.NewLine);
-                            break;
+                            continue;
                         }
 
                         if (File.Exists(newFilePath))           // If file with newFileName already exists...
                         {
                             // print error to log and skip file
                             rtxLog.SendToLog("ERROR: File at " + newFilePath + " already exists. Skipping..." + Environment.NewLine);
-                            break;
+                            continue;
                         }
                     }
                     mkvFiles[i] = newFilePath;                  // Update mkvfiles array with filenames of successfully renamed files

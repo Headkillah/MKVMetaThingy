@@ -170,7 +170,7 @@
             // exitProgramToolStripMenuItem
             // 
             this.exitProgramToolStripMenuItem.Name = "exitProgramToolStripMenuItem";
-            this.exitProgramToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.exitProgramToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
             this.exitProgramToolStripMenuItem.Size = new System.Drawing.Size(307, 22);
             this.exitProgramToolStripMenuItem.Text = "E&xit Program";
             this.exitProgramToolStripMenuItem.Click += new System.EventHandler(this.exitProgramToolStripMenuItem_Click);
@@ -182,14 +182,14 @@
             this.goToMKVToolNixDownloadPageToolStripMenuItem,
             this.recheckToSeeIfMKVToolNixIsInstalledToolStripMenuItem});
             this.mKVToolNixToolStripMenuItem.Name = "mKVToolNixToolStripMenuItem";
-            this.mKVToolNixToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
+            this.mKVToolNixToolStripMenuItem.Size = new System.Drawing.Size(84, 20);
             this.mKVToolNixToolStripMenuItem.Text = "&MKVToolNix";
             // 
             // goToMKVToolNixHomepageToolStripMenuItem
             // 
             this.goToMKVToolNixHomepageToolStripMenuItem.Name = "goToMKVToolNixHomepageToolStripMenuItem";
             this.goToMKVToolNixHomepageToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.goToMKVToolNixHomepageToolStripMenuItem.Size = new System.Drawing.Size(330, 22);
+            this.goToMKVToolNixHomepageToolStripMenuItem.Size = new System.Drawing.Size(329, 22);
             this.goToMKVToolNixHomepageToolStripMenuItem.Text = "Go to MKVToolNix &Homepage...";
             this.goToMKVToolNixHomepageToolStripMenuItem.Click += new System.EventHandler(this.goToMKVToolNixHomepageToolStripMenuItem_Click);
             // 
@@ -197,7 +197,7 @@
             // 
             this.goToMKVToolNixDownloadPageToolStripMenuItem.Name = "goToMKVToolNixDownloadPageToolStripMenuItem";
             this.goToMKVToolNixDownloadPageToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
-            this.goToMKVToolNixDownloadPageToolStripMenuItem.Size = new System.Drawing.Size(330, 22);
+            this.goToMKVToolNixDownloadPageToolStripMenuItem.Size = new System.Drawing.Size(329, 22);
             this.goToMKVToolNixDownloadPageToolStripMenuItem.Text = "Go to MKVToolNix &Download page...";
             this.goToMKVToolNixDownloadPageToolStripMenuItem.Click += new System.EventHandler(this.goToMKVToolNixDownloadPageToolStripMenuItem_Click);
             // 
@@ -205,7 +205,7 @@
             // 
             this.recheckToSeeIfMKVToolNixIsInstalledToolStripMenuItem.Name = "recheckToSeeIfMKVToolNixIsInstalledToolStripMenuItem";
             this.recheckToSeeIfMKVToolNixIsInstalledToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.recheckToSeeIfMKVToolNixIsInstalledToolStripMenuItem.Size = new System.Drawing.Size(330, 22);
+            this.recheckToSeeIfMKVToolNixIsInstalledToolStripMenuItem.Size = new System.Drawing.Size(329, 22);
             this.recheckToSeeIfMKVToolNixIsInstalledToolStripMenuItem.Text = "&Recheck to see if MKVToolNix is installed";
             this.recheckToSeeIfMKVToolNixIsInstalledToolStripMenuItem.Click += new System.EventHandler(this.recheckToSeeIfMKVToolNixIsInstalledToolStripMenuItem_Click);
             // 

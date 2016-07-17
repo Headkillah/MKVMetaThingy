@@ -41,6 +41,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadDataFromFolderOfMKVFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mKVToolNixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +55,6 @@
             this.txtFile = new System.Windows.Forms.TextBox();
             this.fbdMKVDir = new System.Windows.Forms.FolderBrowserDialog();
             this.btnLoadDir = new System.Windows.Forms.Button();
-            this.loadDataFromFolderOfMKVFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -169,23 +169,31 @@
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
             this.loadToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(307, 22);
             this.loadToolStripMenuItem.Text = "L&oad data from MKV...";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
+            // 
+            // loadDataFromFolderOfMKVFilesToolStripMenuItem
+            // 
+            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.Name = "loadDataFromFolderOfMKVFilesToolStripMenuItem";
+            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.Size = new System.Drawing.Size(307, 22);
+            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.Text = "Load Data from &Folder of MKV files...";
+            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.Click += new System.EventHandler(this.loadDataFromFolderOfMKVFilesToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(307, 22);
             this.saveToolStripMenuItem.Text = "&Save Settings to MKV";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // exitProgramToolStripMenuItem
             // 
             this.exitProgramToolStripMenuItem.Name = "exitProgramToolStripMenuItem";
-            this.exitProgramToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.exitProgramToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.exitProgramToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.exitProgramToolStripMenuItem.Size = new System.Drawing.Size(307, 22);
             this.exitProgramToolStripMenuItem.Text = "E&xit Program";
             this.exitProgramToolStripMenuItem.Click += new System.EventHandler(this.exitProgramToolStripMenuItem_Click);
             // 
@@ -285,14 +293,6 @@
             this.btnLoadDir.Text = "Load &Folder";
             this.btnLoadDir.UseVisualStyleBackColor = true;
             this.btnLoadDir.Click += new System.EventHandler(this.btnLoadDir_Click);
-            // 
-            // loadDataFromFolderOfMKVFilesToolStripMenuItem
-            // 
-            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.Name = "loadDataFromFolderOfMKVFilesToolStripMenuItem";
-            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.Size = new System.Drawing.Size(307, 22);
-            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.Text = "Load Data from &Folder of MKV files...";
-            this.loadDataFromFolderOfMKVFilesToolStripMenuItem.Click += new System.EventHandler(this.loadDataFromFolderOfMKVFilesToolStripMenuItem_Click);
             // 
             // frmMain
             // 
