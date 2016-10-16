@@ -7,7 +7,7 @@ using System.Resources;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MKVDefaultTrackChangerThingy")]
-[assembly: AssemblyDescription("Simple frontend for MKVToolNix to batch change the default audioand subtitle tracks on MKV files.")]
+[assembly: AssemblyDescription("Simple frontend for MKVToolNix to batch change the default audio and subtitle tracks on MKV files.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("damysteryman")]
 [assembly: AssemblyProduct("MKVDefaultTrackChangerThingy")]
@@ -33,6 +33,6 @@ using System.Resources;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.1.0.0")]
+[assembly: AssemblyFileVersion("1.1.0.0")]
 [assembly: NeutralResourcesLanguageAttribute("en-GB")]

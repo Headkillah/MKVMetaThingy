@@ -560,7 +560,12 @@ namespace MKVTrackNamerThingy
                             name.Append(subMeta[i, 1] + " ");           // Get Codec from subtitle meta array and add to name
                         break;
                 }
-                name.Append(textBoxArray[i].Text);                      // Add contents of TextBox to name
+
+                if (textBoxArray[i].Text == "")                         // If Name TextBox for this track is empty...
+                    name.Remove(name.Length-1, 1);                      // remove the last trailing space from name
+                else
+                    name.Append(textBoxArray[i].Text);                  // Otherwise dd contents of TextBox to name
+
                 myDebug.WriteLine(name.ToString());
 
                 // append constructed argument for this track to arg

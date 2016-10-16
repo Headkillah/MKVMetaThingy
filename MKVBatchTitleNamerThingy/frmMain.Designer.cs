@@ -56,6 +56,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.txtShowTitle = new System.Windows.Forms.TextBox();
             this.gbxTitlePrep = new System.Windows.Forms.GroupBox();
+            this.btnOffsetCopy = new System.Windows.Forms.Button();
             this.btnTitleCopy = new System.Windows.Forms.Button();
             this.nudTitleEpOffset = new System.Windows.Forms.NumericUpDown();
             this.chkTitlePrepEpNo = new System.Windows.Forms.CheckBox();
@@ -89,7 +90,6 @@
             this.chkFilePrepShow = new System.Windows.Forms.CheckBox();
             this.chkFilePrepEpiZeros = new System.Windows.Forms.CheckBox();
             this.nudFileMinDigits = new System.Windows.Forms.NumericUpDown();
-            this.btnOffsetCopy = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTitleMinDigits)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -375,6 +375,16 @@
             this.gbxTitlePrep.TabIndex = 32;
             this.gbxTitlePrep.TabStop = false;
             this.gbxTitlePrep.Text = "Prepend";
+            // 
+            // btnOffsetCopy
+            // 
+            this.btnOffsetCopy.Location = new System.Drawing.Point(7, 313);
+            this.btnOffsetCopy.Name = "btnOffsetCopy";
+            this.btnOffsetCopy.Size = new System.Drawing.Size(122, 23);
+            this.btnOffsetCopy.TabIndex = 36;
+            this.btnOffsetCopy.Text = "Copy Offset Over ==>";
+            this.btnOffsetCopy.UseVisualStyleBackColor = true;
+            this.btnOffsetCopy.Click += new System.EventHandler(this.btnOffsetCopy_Click);
             // 
             // btnTitleCopy
             // 
@@ -726,16 +736,6 @@
             this.nudFileMinDigits.TabIndex = 21;
             this.nudFileMinDigits.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // btnOffsetCopy
-            // 
-            this.btnOffsetCopy.Location = new System.Drawing.Point(7, 313);
-            this.btnOffsetCopy.Name = "btnOffsetCopy";
-            this.btnOffsetCopy.Size = new System.Drawing.Size(122, 23);
-            this.btnOffsetCopy.TabIndex = 36;
-            this.btnOffsetCopy.Text = "Copy Offset Over ==>";
-            this.btnOffsetCopy.UseVisualStyleBackColor = true;
-            this.btnOffsetCopy.Click += new System.EventHandler(this.btnOffsetCopy_Click);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -758,6 +758,8 @@
             this.Controls.Add(this.llbMKVToolNix);
             this.Controls.Add(this.lblAppInfo);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MKVBatchTitleRenamerThingy";

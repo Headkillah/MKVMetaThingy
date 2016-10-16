@@ -17,15 +17,7 @@ namespace MKVDefaultTrackChangerThingy
     {
         #region globals
 
-        /// <summary>
-        /// List to add audio tracks in file to ListBox
-        /// </summary>
-        List<string> audioTracks;
-
-        /// <summary>
-        /// List to add subtitletracks in file in ListBox
-        /// </summary>
-        List<string> subTracks;
+        // None here atm
 
         #endregion globals
 
@@ -124,17 +116,17 @@ namespace MKVDefaultTrackChangerThingy
         #region methods
 
         /// <summary>
-        /// Method that identifies the Audio and Subtitle tracks from the dynamic object and puts their names in the respective listbox
+        /// Method that Makes a TrackList Object, that contains A List of String Descriptions of the tracks from provided json data, along with the index of the current default track.
         /// </summary>
-        /// <param name="json">the dynamic json object obtained from GetJsonObject()</param>
-        private void GetTracks(dynamic json, string trackType)
+        /// <param name="json">The json data with information on the tracks in the mkv file.</param>
+        /// <param name="trackType">Either MKVToolNix.TRACK_AUDIO or MKVToolNix.TRACK_SUB</param>
+        /// <returns>A TTrackList coontaiining a Striing List of the Descriptions of the tracks, along with the index of the default track.</returns>
+        private TrackList GetTracks(dynamic json, string trackType)
         {
             int trackCount = 0;         // Initialize counts and selected values
-            int defaultTrack = 0;                                       
+            int defaultTrack = 0;
 
-            ListBox listBox = null;
-            List<string> trackList = null;
-            InitListBoxes();            // Initialize the ListBoxes
+            TrackList trackList = new TrackList();
 
             for (int i = 0; i < json["tracks"].Length; i++)             // For each track...
             {
@@ -142,7 +134,7 @@ namespace MKVDefaultTrackChangerThingy
                 {
                     string trackName;                                   // Declare track name and isDefault vars
                     bool trackIsDefault;
-                    
+
                     try
                     {
                         trackName = json["tracks"][i]["properties"]["track_name"];      // Try to get the track name from dynamic object
@@ -159,7 +151,7 @@ namespace MKVDefaultTrackChangerThingy
                     }
                     catch (KeyNotFoundException)
                     {
-                        myDebug.WriteLine("Track No." + i + "'s \"Default Track\" flag does not even exist... using blank name instead.");
+                        myDebug.WriteLine("Track No." + i + "'s \"Default Track\" flag does not even exist... setting default track flag to false.");
                         trackIsDefault = false;                                         // If it is not even present in object, use default of false
                     }
 
@@ -168,26 +160,14 @@ namespace MKVDefaultTrackChangerThingy
                     myDebug.WriteLine(trackType.ToUpper() + "\t" + trackLang + "\t" + trackIsDefault + "\t" + trackName);
 
                     trackCount++;                           // Increment track counter
-                    switch (trackType)
-                    {
-                        case MKVToolNix.TRACK_AUDIO:        // If this track is an audio track
-                            trackList = audioTracks;        // Set track list to audio one
-                            listBox = lbxAudio;             // Set listbox to the audio one
-                            break;
 
-                        case MKVToolNix.TRACK_SUB:          // If this track is a subtitle track
-                            trackList = subTracks;          // Set track list to subtitle one
-                            listBox = lbxSubtitle;          // Set listbox to subtitle one
-                            break;
-                    }
-
-                    trackList.Add(listItem);                // Add constructed List Item to tracks list
+                    trackList.tracks.Add(listItem);                // Add constructed List Item to tracks list
                     if (trackIsDefault)                     // If this track is the default subtitle track
                         defaultTrack = trackCount;          // Set the defaultSub value to the current subtitle track count
                 }
             }
-            RefreshListBox(listBox, trackList);             // Refresh the ListBoxes with the updated lists
-            listBox.SelectedIndex = defaultTrack;           // Set the Selected value of the ListBox to match the defaultTrack value
+            trackList.defaultTrack = defaultTrack;          // Set the Selected value of the ListBox to match the defaultTrack value
+            return trackList;
         }
 
         /// <summary>
@@ -249,13 +229,13 @@ namespace MKVDefaultTrackChangerThingy
         {
             string exeName = "\"" + MKVToolNix.ExeGetPath(MKVToolNix.mkvmergeExe) + "\"";   // Get path for mkvmerge.exe and wrap in quotes for RunProcess
 
-            dynamic json = Utils.GetJsonObject(Utils.RunProcess(exeName, "-i -F json \"" + fileName + "\""));    // Get JSON string from mkvmerge file analysis output and turn it into dynamic object
-            GetTracks(json, MKVToolNix.TRACK_AUDIO);                                // Call GetTracks with the created dynamic object to get audio tracks
-            GetTracks(json, MKVToolNix.TRACK_SUB);                                  // Call GetTracks with the created dynamic object to get sub tracks
+            dynamic mkvData = Utils.GetJsonObject(Utils.RunProcess(exeName, "-i -F json \"" + fileName + "\""));    // Get JSON string from mkvmerge file analysis output and turn it into dynamic object                               
+            RefreshListBox(lbxAudio, GetTracks(mkvData, MKVToolNix.TRACK_AUDIO));      // Call GetTracks with the created dynamic object to get audio tracks
+            RefreshListBox(lbxSubtitle, GetTracks(mkvData, MKVToolNix.TRACK_SUB));     // Call GetTracks with the created dynamic object to get sub tracks
 
             try
             {
-                lblTitle.Text = json["container"]["properties"]["title"];   // Try to display video Title from JSON Object
+                lblTitle.Text = mkvData["container"]["properties"]["title"];   // Try to display video Title from JSON Object
             }
             catch(KeyNotFoundException)
             {
@@ -319,22 +299,23 @@ namespace MKVDefaultTrackChangerThingy
 
                 myDebug.WriteLine(Path.GetFileName(mkvFiles[i]) + ":\thas " + audioCount + " audio, and " + subCount + " subs.");
 
-                txtFile.AppendText(mkvFiles[i]);                // Add current file's pathto file name TextBox
+                txtFile.AppendText(mkvFiles[i]);                // Add current file's path to file name TextBox
                 if (i < (mkvFiles.Length - 1))                  // If the file is not the last one...
                     txtFile.AppendText(Environment.NewLine);    // Also add a new line for nextfile name
             }
 
-            RefreshListBoxes();
+            
+            
             // Get dynamic object from JSON string from mkvmerge.exe for file in folder with max amount of audio tracks
             json = Utils.GetJsonObject(Utils.RunProcess(exeName, "-i -F json \"" + mkvFiles[maxAudioIndex] + "\""));
 
-            GetTracks(json, MKVToolNix.TRACK_AUDIO);                                // Call GetTracks with the created dynamic object to get audio tracks
+            RefreshListBox(lbxAudio, GetTracks(json, MKVToolNix.TRACK_AUDIO));      // Call GetTracks with the created dynamic object to get audio tracks
 
             if (maxAudioIndex != maxSubIndex)   // If the "max audio tracks" file and the "max subtitle tracks" file are not the same...
                 // Get dynamic object from JSON string from mkvmerge.exe for file in folder with max amount of subtitle tracks
                 json = Utils.GetJsonObject(Utils.RunProcess(exeName, "-i -F json \"" + mkvFiles[maxSubIndex] + "\""));
 
-            GetTracks(json, MKVToolNix.TRACK_SUB);                                  // Call GetTracks with the created dynamic object to get sub tracks
+            RefreshListBox(lbxSubtitle, GetTracks(json, MKVToolNix.TRACK_SUB));     // Call GetTracks with the created dynamic object to get sub tracks
 
             lblTitle.Text = "(Multiple files are loaded)";         // Change title label to inform that there are multiple files loadad
         }
@@ -467,34 +448,15 @@ namespace MKVDefaultTrackChangerThingy
         }
 
         /// <summary>
-        /// Method that intializes the 2 ListBoxes
+        /// Method to refresh and re-bind a List of Strings to a corresponding ListBox control on the form, and auto-select the default track.
         /// </summary>
-        private void InitListBoxes()
+        /// <param name="listBox">The ListBox to bind the String List Data to.</param>
+        /// <param name="trackList">The TrackList containing the human readable track descriptions for that ListBox, along with the index of the default track.</param>
+        private void RefreshListBox(ListBox listBox, TrackList trackList)
         {
-            audioTracks = new List<string>();   // Instantiate new list for audioTracks
-            subTracks = new List<string>();     // Instantiate new list for subTracks
-
-            audioTracks.Add("(none)");          // Add the "(none)" item to the audioTracks list
-            subTracks.Add("(none)");            // Add the "(none)" item to the subTracks list
-
-            //RefreshListBoxes();                 // Call ListBox refreshing method
-        }
-
-        /// <summary>
-        /// Method to refresh and re-bind the audio and subtitle lists to the respective ListBoxeson screen
-        /// </summary>
-        private void RefreshListBoxes()
-        {
-            lbxAudio.DataSource = null;             // Must make datasource for each ListBox null for somereason, not really sure why though
-            lbxSubtitle.DataSource = null;
-            lbxAudio.DataSource = audioTracks;      // Bind the audioTracks and subTracks lists to the ListBoxes
-            lbxSubtitle.DataSource = subTracks;
-        }
-
-        private void RefreshListBox(ListBox listBox, List<string> trackList)
-        {
-            listBox.DataSource = null;             // Must make datasource for each ListBox null for somereason, not really sure why though
-            listBox.DataSource = trackList;      // Bind the audioTracks and subTracks lists to the ListBoxes
+            listBox.DataSource = null;
+            listBox.DataSource = trackList.tracks;
+            listBox.SelectedIndex = trackList.defaultTrack;
         }
 
         /// <summary>
@@ -505,6 +467,7 @@ namespace MKVDefaultTrackChangerThingy
         {
             loadToolStripMenuItem.Enabled = unlocked;   // Enable or disable the following controls depending on the boool passed toit
             saveToolStripMenuItem.Enabled = unlocked;
+            btnLoadDir.Enabled = unlocked;
             btnLoad.Enabled = unlocked;
             btnSave.Enabled = unlocked;
         }

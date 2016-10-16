@@ -315,7 +315,9 @@
             this.Controls.Add(this.lbxAudio);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
             this.Name = "frmMain";
             this.Text = "MKVDefaultTrackChangerThingy";
             this.Load += new System.EventHandler(this.frmMain_Load);
