@@ -44,7 +44,7 @@ namespace MKVBatchTitleNamerThingy
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            // Update APpInfo label with app name and version
+            // Update AppInfo label with app name and version
             lblAppInfo.Text = Application.ProductName + " ver" + Application.ProductVersion + lblAppInfo.Text;
 
             // Disable some controls until data is loaded
@@ -98,6 +98,35 @@ namespace MKVBatchTitleNamerThingy
         {
             chkFilePrepEpOffset.Checked = chkTitlePrepEpOffset.Checked;
             nudFileEpOffset.Value = nudTitleEpOffset.Value;
+        }
+
+        private void btnTitleLoad_Click(object sender, EventArgs e)
+        {
+            DialogResult result = ofdTXT.ShowDialog();      // Show dialog and get result from it
+            if (result == DialogResult.OK)                  // If user clicks OK
+            {
+                //using (StreamReader sr = File.OpenText(Path.GetFullPath(ofdTXT.FileName)))  // Open selected text file with show titles in it
+                //{
+                    
+                //    int counter = 0;
+                //    string title = "";
+
+                //    while ((title = sr.ReadLine()) != null && counter < txtTitles.Length)   // While there are enough Title Text Boxes and Titles in the text file...
+                //    {
+                //        txtTitles[counter].Text = title;                                    // Copy the title from the text file to the text box
+                //        counter++;
+                //    }
+                //}
+
+                string[] titles = File.ReadAllLines(Path.GetFullPath(ofdTXT.FileName), Encoding.Default);   // Open selected text file with show titles in it
+                                                                                                            // Use File.ReadAllLines() to control Encoding
+                int counter = 0;
+                while (counter < titles.Length && counter < txtTitles.Length)
+                {
+                    txtTitles[counter].Text = titles[counter];
+                    counter++;
+                }
+            }
         }
 
         private void loadDataFromMKVToolStripMenuItem_Click(object sender, EventArgs e)
@@ -194,6 +223,7 @@ namespace MKVBatchTitleNamerThingy
         private void UnlockEditControls(bool unlocked)
         {
             btnTitleCopy.Enabled = unlocked;                // Enable Copy Titles Over button, and the Activated and select all checkboxes
+            btnTitleLoad.Enabled = unlocked;
             chkTitleEditActivate.Enabled = unlocked;
             chkFileNameEditActivate.Enabled = unlocked;
             chkTitleSelectAll.Enabled = unlocked;
@@ -335,7 +365,9 @@ namespace MKVBatchTitleNamerThingy
 
                 try
                 {
-                    txtTitles[i].Text = json["container"]["properties"]["title"];   // Try to display video Title from JSON Object
+                    //txtTitles[i].Text = json["container"]["properties"]["title"];   // Try to display video Title from JSON Object
+                    byte[] eretgfeghbrf = Encoding.Default.GetBytes(json["container"]["properties"]["title"]);      // Load title from json this way
+                    txtTitles[i].Text = Encoding.UTF8.GetString(eretgfeghbrf);                                      // to handle encoding of displayed text in GUI
                 }
                 catch (KeyNotFoundException)
                 {
@@ -344,7 +376,7 @@ namespace MKVBatchTitleNamerThingy
                 }
             }
             UnlockEditControls(true);                // Enable Copy Titles Over button, and the Activated and select all checkboxes
-            txtShowTitle.Focus();                       // Put cursor focus on the shot title textbox for user to type in the show's title
+            txtShowTitle.Focus();                       // Put cursor focus on the show title textbox for user to type in the show's title
         }
 
         /// <summary>
@@ -411,9 +443,9 @@ namespace MKVBatchTitleNamerThingy
                     if (chkTitlePrepEpNo.Checked)                           // If "Prepend Episode No." is checked...
                             title.Append(epNum.ToString() + " ");           // Add the episode no. to title
 
-                    title.Append(txtTitles[i].Text);                        // Add the title textbox contrnts to title
+                    title.Append(txtTitles[i].Text);                        // Add the title textbox contents to title
 
-                    string arg = " -e info -" + sType + " \"title=" + title.ToString() + "\"";  // make track edit args for mkvpropedit
+                    string arg = " -e info -" + sType + " \"title=" + title.ToString().SanitizeMetaName() + "\"";  // make track edit args for mkvpropedit
 
                     retStr = Utils.RunProcess(exeName, filePath + arg);     // Run mkvpropedit with specified args
                     rtxLog.SendToLog(exeName + " " + filePath + arg);       // Send full command to log
@@ -494,7 +526,7 @@ namespace MKVBatchTitleNamerThingy
                     if (chkFilePrepDash.Checked)                    // If "Prepend " - " " is checked
                         fileName.Append("- ");                      // add the "- " to filename
 
-                    fileName.Append(txtFileNames[i].Text);          // Add the file name textbox contents to filename
+                    fileName.Append(txtFileNames[i].Text.SanitizeFileName());          // Add the file name textbox contents to filename
 
                     if (!fileName.ToString().EndsWith(".mkv"))      // If filename does not already end with ".mkv"
                         fileName.Append(".mkv");                    // then add ".mkv"
@@ -520,6 +552,11 @@ namespace MKVBatchTitleNamerThingy
                         {
                             // If that fails due to invalid characters in name, print error to log and skip file
                             rtxLog.SendToLog("ERROR: new file name contains invalid characters. Skipping..." + Environment.NewLine);
+                            continue;
+                        }
+                        catch (Exception ex)
+                        {
+                            rtxLog.SendToLog("ERROR: Exception occurred trying to rename file! --> " + ex.Message);
                             continue;
                         }
                     }

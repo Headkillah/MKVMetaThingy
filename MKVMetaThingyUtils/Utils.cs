@@ -98,5 +98,42 @@ namespace MKVMetaThingyUtils
 
             return num;                         // return num as final value
         }
+
+        public static string SanitizeMetaName(this string _str)
+        {
+            List<char> _strChars = _str.ToList<char>();
+
+            for (int i = 0; i < _strChars.Count; i++)
+            {
+                if (_strChars[i] == '\"')
+                {
+                    _strChars.Insert(i, '\\');
+                    i++;
+                }
+            }
+
+            return String.Join("", _strChars);
+        }
+
+        public static string SanitizeFileName(this string _str)
+        {
+            char[] badChars = Path.GetInvalidFileNameChars();
+            char[] _strChars = _str.ToCharArray();
+
+
+            for (int i = 0; i < _strChars.Length; i++ )
+            {
+                if (_strChars[i] == '\"')
+                {
+                    _strChars[i] = '\'';
+                }
+                else if (badChars.Contains(_strChars[i]))
+                {
+                    _strChars[i] = '_';
+                }
+            }
+
+            return new string(_strChars);
+        }
     }
 }

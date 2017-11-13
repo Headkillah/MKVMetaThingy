@@ -17,7 +17,7 @@ namespace MKVDefaultTrackChangerThingy
         public List<String> tracks { get; set; }
 
         /// <summary>
-        /// Integer holdign the index of the default track in the List.
+        /// Integer holding the index of the default track in the List.
         /// </summary>
         public int defaultTrack { get; set; }
 

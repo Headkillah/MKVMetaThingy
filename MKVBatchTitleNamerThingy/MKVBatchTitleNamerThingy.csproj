@@ -51,10 +51,10 @@
     <ApplicationIcon>wosrticonever.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>7F59025E4CC6E92993E3FAA1A0B9C469A4857F16</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>F8A7D80FA7ED84E8775F3E7709CA3CE1FADEA1E1</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>MKVBatchTitleNamerThingy_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>MKVBatchTitleNamerThingy_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -95,6 +95,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="MKVBatchTitleNamerThingy_1_TemporaryKey.pfx" />
     <None Include="MKVBatchTitleNamerThingy_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

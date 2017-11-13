@@ -90,6 +90,8 @@
             this.chkFilePrepShow = new System.Windows.Forms.CheckBox();
             this.chkFilePrepEpiZeros = new System.Windows.Forms.CheckBox();
             this.nudFileMinDigits = new System.Windows.Forms.NumericUpDown();
+            this.btnTitleLoad = new System.Windows.Forms.Button();
+            this.ofdTXT = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTitleMinDigits)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -355,7 +357,6 @@
             // gbxTitlePrep
             // 
             this.gbxTitlePrep.Controls.Add(this.btnOffsetCopy);
-            this.gbxTitlePrep.Controls.Add(this.btnTitleCopy);
             this.gbxTitlePrep.Controls.Add(this.nudTitleEpOffset);
             this.gbxTitlePrep.Controls.Add(this.chkTitlePrepEpNo);
             this.gbxTitlePrep.Controls.Add(this.label6);
@@ -378,7 +379,7 @@
             // 
             // btnOffsetCopy
             // 
-            this.btnOffsetCopy.Location = new System.Drawing.Point(7, 313);
+            this.btnOffsetCopy.Location = new System.Drawing.Point(7, 285);
             this.btnOffsetCopy.Name = "btnOffsetCopy";
             this.btnOffsetCopy.Size = new System.Drawing.Size(122, 23);
             this.btnOffsetCopy.TabIndex = 36;
@@ -388,7 +389,7 @@
             // 
             // btnTitleCopy
             // 
-            this.btnTitleCopy.Location = new System.Drawing.Point(7, 285);
+            this.btnTitleCopy.Location = new System.Drawing.Point(371, 120);
             this.btnTitleCopy.Name = "btnTitleCopy";
             this.btnTitleCopy.Size = new System.Drawing.Size(122, 23);
             this.btnTitleCopy.TabIndex = 35;
@@ -736,13 +737,29 @@
             this.nudFileMinDigits.TabIndex = 21;
             this.nudFileMinDigits.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // btnTitleLoad
+            // 
+            this.btnTitleLoad.Location = new System.Drawing.Point(371, 91);
+            this.btnTitleLoad.Name = "btnTitleLoad";
+            this.btnTitleLoad.Size = new System.Drawing.Size(122, 23);
+            this.btnTitleLoad.TabIndex = 36;
+            this.btnTitleLoad.Text = "Load Titles from .txt";
+            this.btnTitleLoad.UseVisualStyleBackColor = true;
+            this.btnTitleLoad.Click += new System.EventHandler(this.btnTitleLoad_Click);
+            // 
+            // ofdTXT
+            // 
+            this.ofdTXT.Filter = "Text Files|*.txt";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1008, 611);
+            this.Controls.Add(this.btnTitleLoad);
             this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.btnTitleCopy);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.gbxTitlePrep);
             this.Controls.Add(this.txtShowTitle);
@@ -847,6 +864,8 @@
         private System.Windows.Forms.CheckBox chkTitleSelectAll;
         private System.Windows.Forms.CheckBox chkFileSelectAll;
         private System.Windows.Forms.Button btnOffsetCopy;
+        private System.Windows.Forms.Button btnTitleLoad;
+        private System.Windows.Forms.OpenFileDialog ofdTXT;
     }
 }
 

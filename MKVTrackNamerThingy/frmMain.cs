@@ -24,6 +24,9 @@ namespace MKVTrackNamerThingy
         string[,] audioMeta;
         string[,] subMeta;
 
+        TextBox[] audioLangBoxes;
+        TextBox[] subLangBoxes;
+
         #endregion globals
 
         #region init
@@ -212,7 +215,7 @@ namespace MKVTrackNamerThingy
 
                 myDebug.WriteLine(Path.GetFileName(mkvFiles[i]) + ":\thas " + audioCount + " audio, and " + subCount + " subs.");
 
-                txtFile.AppendText(mkvFiles[i]);                // Add current file's pathto file name TextBox
+                txtFile.AppendText(mkvFiles[i]);                // Add current file's path to file name TextBox
                 if (i < (mkvFiles.Length - 1))                  // If the file is not the last one...
                     txtFile.AppendText(Environment.NewLine);    // Also add a new line for nextfile name
             }
@@ -220,8 +223,8 @@ namespace MKVTrackNamerThingy
             json = Utils.GetJsonObject(Utils.RunProcess(exeName, "-i -F json \"" + mkvFiles[maxAudioIndex] + "\""));
 
             audioMeta = InitMetaArray(json, MKVToolNix.TRACK_AUDIO, 3);                             // Initialize audio meta array
-            InitTrackArrays(json, MKVToolNix.TRACK_AUDIO, out audioLabels, out audioTextBoxes);     // Initialize Label and TextBox arrays for the audio tracks
-            InitPanel(pnlAudio, audioLabels.Length, audioLabels, audioTextBoxes);                   // Initialize the Panel for all the audio track controls
+            InitTrackArrays(json, MKVToolNix.TRACK_AUDIO, out audioLabels, out audioTextBoxes, out audioLangBoxes);     // Initialize Label and TextBox arrays for the audio tracks
+            InitPanel(pnlAudio, audioLabels.Length, audioLabels, audioTextBoxes, audioLangBoxes);                   // Initialize the Panel for all the audio track controls
             GetTracks(json, MKVToolNix.TRACK_AUDIO);                                                // Get the audio track info
 
             if (maxAudioIndex != maxSubIndex)   // If the "max audio tracks" file and the "max subtitle tracks" file are not the same...
@@ -229,8 +232,8 @@ namespace MKVTrackNamerThingy
                 json = Utils.GetJsonObject(Utils.RunProcess(exeName, "-i -F json \"" + mkvFiles[maxSubIndex] + "\""));
 
             subMeta = InitMetaArray(json, MKVToolNix.TRACK_SUB, 2);                                 // Initialize subtitle meta array
-            InitTrackArrays(json, MKVToolNix.TRACK_SUB, out subLabels, out subTextBoxes);           // Initialize Label and TextBox arrays for the subtitle tracks
-            InitPanel(pnlSubtitle, subLabels.Length, subLabels, subTextBoxes);                      // Initialize the Panel for all the subtitle track controls
+            InitTrackArrays(json, MKVToolNix.TRACK_SUB, out subLabels, out subTextBoxes, out subLangBoxes);           // Initialize Label and TextBox arrays for the subtitle tracks
+            InitPanel(pnlSubtitle, subLabels.Length, subLabels, subTextBoxes, subLangBoxes);                      // Initialize the Panel for all the subtitle track controls
             GetTracks(json, MKVToolNix.TRACK_SUB);                                                  // Get the subtitle track info
 
             myDebug.WriteLine(Path.GetFileName(mkvFiles[maxAudioIndex]) + " has the most Audio tracks.");
@@ -252,10 +255,10 @@ namespace MKVTrackNamerThingy
 
             audioMeta = InitMetaArray(json, MKVToolNix.TRACK_AUDIO, 3);                             // Initialize Meta Arrays
             subMeta = InitMetaArray(json, MKVToolNix.TRACK_SUB, 2);
-            InitTrackArrays(json, MKVToolNix.TRACK_AUDIO, out audioLabels, out audioTextBoxes);     // Initialize label and TextBox Arrays
-            InitTrackArrays(json, MKVToolNix.TRACK_SUB, out subLabels, out subTextBoxes);
-            InitPanel(pnlAudio, audioLabels.Length, audioLabels, audioTextBoxes);                   // Initialize Panels
-            InitPanel(pnlSubtitle, subLabels.Length, subLabels, subTextBoxes);
+            InitTrackArrays(json, MKVToolNix.TRACK_AUDIO, out audioLabels, out audioTextBoxes, out audioLangBoxes);     // Initialize label and TextBox Arrays
+            InitTrackArrays(json, MKVToolNix.TRACK_SUB, out subLabels, out subTextBoxes, out subLangBoxes);
+            InitPanel(pnlAudio, audioLabels.Length, audioLabels, audioTextBoxes, audioLangBoxes);                   // Initialize Panels
+            InitPanel(pnlSubtitle, subLabels.Length, subLabels, subTextBoxes, subLangBoxes);
             GetTracks(json, MKVToolNix.TRACK_AUDIO);                                                // Get info for audio and subtitle tracks from dynamic object
             GetTracks(json, MKVToolNix.TRACK_SUB);
 
@@ -286,8 +289,8 @@ namespace MKVTrackNamerThingy
                 string exeName = "\"" + MKVToolNix.ExeGetPath(MKVToolNix.mkvpropeditExe) + "\"";    // Get path for mkvpropedit.exe and wrap in quotes for use as RunProcess arg
                 
                 StringBuilder args = new StringBuilder();           // Make new StringBuilder for arguments
-                args.Append(BuildArgs(audioTextBoxes, false));      // Add arguments for audio tracks
-                args.Append(BuildArgs(subTextBoxes, false));        // Add arguments for subtitle tracks
+                args.Append(BuildArgs(audioTextBoxes, audioLangBoxes, false));      // Add arguments for audio tracks
+                args.Append(BuildArgs(subTextBoxes, subLangBoxes, false));        // Add arguments for subtitle tracks
 
                 if (mkvFiles.Length > 1)                            // If there is more than one file to modify...
                 {
@@ -322,8 +325,8 @@ namespace MKVTrackNamerThingy
                                 goodSubCount--;                                         // Means the last subtitle track was not found, so decrement good subtitle count
 
                             argsAlt = new StringBuilder();                                          // Instantiate new StringBuilder for alternate args
-                            argsAlt.Append(BuildArgs(audioTextBoxes, false, goodAudioCount));       // Build new audio tracks args based on updated good audio count
-                            argsAlt.Append(BuildArgs(subTextBoxes, false, goodSubCount));           // Build new subtitle track args based on updated good subtitle count
+                            argsAlt.Append(BuildArgs(audioTextBoxes, audioLangBoxes, false, goodAudioCount));       // Build new audio tracks args based on updated good audio count
+                            argsAlt.Append(BuildArgs(subTextBoxes, subLangBoxes, false, goodSubCount));           // Build new subtitle track args based on updated good subtitle count
 
                             rtxLog.SendToLog(exeName + " " + fileName + argsAlt.ToString());        // Send new complete command to log
                             retStr = Utils.RunProcess(exeName, fileName + argsAlt.ToString());      // Try running mkvpropedit with new args
@@ -364,7 +367,8 @@ namespace MKVTrackNamerThingy
                 if ((string)json["tracks"][i]["type"] == trackType)                 // If the current track is the specified type...
                 {
                     string trackName;                                               // Declare trackName var
-                    string trackLang = json["tracks"][i]["properties"]["language"].ToUpper();   // Get track language from dynamic object
+                    string trackLang = json["tracks"][i]["properties"]["language"];   // Get track language from dynamic object
+                    //string trackLang = json["tracks"][i]["properties"]["language"].ToUpper();
                     string trackCodec = (string)json["tracks"][i]["codec"];         //Get track Codec from dynamic object
                     if (trackCodec == "AC-3/E-AC-3")
                         trackCodec = "DD";
@@ -412,6 +416,8 @@ namespace MKVTrackNamerThingy
                             audioLabels[count].Text = audioMeta[count, 0] + " - " + audioMeta[count, 1] + " - " + audioMeta[count, 2];  // Set label text for track to string made from the track's Metadata
                             audioTextBoxes[count].Text = trackName;     // Put the track's name in the track's TextBox
 
+                            audioLangBoxes[count].Text = trackLang;
+
                             count++;                                    // Increment count
                             break;
 
@@ -421,6 +427,8 @@ namespace MKVTrackNamerThingy
                             myDebug.WriteLine(subMeta[count, 0] + " - " + subMeta[count, 1]);
                             subLabels[count].Text = subMeta[count, 0] + " - " + subMeta[count, 1];  // Set label text for track to string made from the track's Metadata
                             subTextBoxes[count].Text = trackName;       // Put the track's name in the track's TextBox
+
+                            subLangBoxes[count].Text = trackLang;
 
                             count++;                                    // Increment count
                             break;
@@ -435,8 +443,8 @@ namespace MKVTrackNamerThingy
         /// <param name="pnl">The Panel to initialize</param>
         /// <param name="trackCount">The amount of tracks going into the Panel</param>
         /// <param name="labelArray">The array for the Labels going in this Panel</param>
-        /// <param name="textBoxArray">The array for the TextBoxes going in this Panel</param>
-        private void InitPanel(Panel pnl, int trackCount, Label[] labelArray, TextBox[] textBoxArray)
+        /// <param name="txtNameArray">The array for the TextBoxes going in this Panel</param>
+        private void InitPanel(Panel pnl, int trackCount, Label[] labelArray, TextBox[] txtNameArray, TextBox[] txtLangArray)
         {
             int left = 0;                                       // Initialize vars to define some distances
             int labelTop = 0;
@@ -465,11 +473,24 @@ namespace MKVTrackNamerThingy
                 labelArray[i].Width = 220;                              // Set width for Label
                 pnl.Controls.Add(labelArray[i]);                        // Add the control to the Panel
 
-                textBoxArray[i] = new TextBox();                        // Make new TextBox for current index in TextBoxArray
-                textBoxArray[i].Left = left;                            // Set X coordinate location in panel for this TextBox
-                textBoxArray[i].Top = textBoxTop + (controlGap * i);    // Set Y coordinate location in panel for this TextBox
-                textBoxArray[i].Width = 300;                            // Set  width for TextBox
-                pnl.Controls.Add(textBoxArray[i]);                      // Add the control to the Panel
+                txtNameArray[i] = new TextBox();                        // Make new TextBox for current index in TextBoxArray
+                txtNameArray[i].Left = left;                            // Set X coordinate location in panel for this TextBox
+                txtNameArray[i].Top = textBoxTop + (controlGap * i);    // Set Y coordinate location in panel for this TextBox
+                txtNameArray[i].Width = 210;                            // Set  width for TextBox
+                pnl.Controls.Add(txtNameArray[i]);                      // Add the control to the Panel
+
+                Label lblLangCode = new Label();
+                lblLangCode.Text = "Lang Code:";
+                lblLangCode.Left = left + 215;
+                lblLangCode.Top = textBoxTop + (controlGap * i) + 3;
+                lblLangCode.Width = 65;
+                pnl.Controls.Add(lblLangCode);
+
+                txtLangArray[i] = new TextBox();
+                txtLangArray[i].Left = left + 280;
+                txtLangArray[i].Top = textBoxTop + (controlGap * i);
+                txtLangArray[i].Width = 40;
+                pnl.Controls.Add(txtLangArray[i]);
             }
         }
 
@@ -499,7 +520,7 @@ namespace MKVTrackNamerThingy
         /// <param name="trackType">A string identifying what track type to use</param>
         /// <param name="labels">The Label Array to init</param>
         /// <param name="textBoxes">The TextBox Array to init</param>
-        private void InitTrackArrays(dynamic json, string trackType, out Label[] labels, out TextBox[] textBoxes)
+        private void InitTrackArrays(dynamic json, string trackType, out Label[] labels, out TextBox[] textBoxes, out TextBox[] langBoxes)
         {
             int count = 0;                                              // Initialize a count
             for (int i = 0; i < json["tracks"].Length; i++)                 // For each of the tracks...
@@ -508,6 +529,7 @@ namespace MKVTrackNamerThingy
 
             labels = new Label[count];                                  // Create new Label array with count as its size
             textBoxes = new TextBox[count];                             // Create new TextBox array with count as its size
+            langBoxes = new TextBox[count];
         }
 
         /// <summary>
@@ -517,10 +539,10 @@ namespace MKVTrackNamerThingy
         /// <param name="addSetting">Boolean to specify whether the argument edits the existing setting in the track in file, or adds it anew. Used for when the setting does not exist in the track in file.</param>
         /// <param name="trackCount">Optional. Used to specify how many tracks in the Array are being processed. Will use the TextBox Array's Item Count as default.</param>
         /// <returns>String of arguments for editing the tracks in the ListBox</returns>
-        private string BuildArgs(TextBox[] textBoxArray, bool addSetting, int trackCount = 0)
+        private string BuildArgs(TextBox[] textBoxArray, TextBox[] langBoxArray, bool addSetting, int trackCount = 0)
         {
             if (trackCount == 0)                                    // If trackCount is defaul sentinel value of zero
-                trackCount = textBoxArray.Length;                   // Set trackCount to amount if TextBoxes
+                trackCount = textBoxArray.Length;                   // Set trackCount to amount of TextBoxes
 
             string arg = "";                                        // initialize the string vars, the arg, its track type, and its setting type
             string tType = "";                                      
@@ -561,15 +583,18 @@ namespace MKVTrackNamerThingy
                         break;
                 }
 
-                if (textBoxArray[i].Text == "")                         // If Name TextBox for this track is empty...
+                if (textBoxArray[i].Text == "" && name.Length > 0)      // If Name TextBox for this track is empty but prefill fields are checked...
                     name.Remove(name.Length-1, 1);                      // remove the last trailing space from name
                 else
-                    name.Append(textBoxArray[i].Text);                  // Otherwise dd contents of TextBox to name
+                    name.Append(textBoxArray[i].Text);                  // Otherwise add contents of TextBox to name
 
                 myDebug.WriteLine(name.ToString());
 
                 // append constructed argument for this track to arg
                 arg += " -e track:" + tType + (i + 1) + " -" + sType + " \"name=" + name.ToString() + "\"";
+
+                if (langBoxArray[i].Text.Length == 3)
+                    arg += " --set language=" + langBoxArray[i].Text.ToLower();
             }
             return arg;                                             // return the completed arg
         }
